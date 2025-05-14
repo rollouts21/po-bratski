@@ -1,0 +1,145 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="checkout-page">
+    <div class="container">
+        <h1 class="section-title">Оформление заказа</h1>
+        <div class="checkout-grid">
+            <!-- Форма заказа -->
+            <div class="delivery-form" data-aos="fade-right">
+                <form class="checkout-form" method="post" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Ошибки формы -->
+                    {% if form.errors %}
+                        <div class="form-errors">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <p class="text-danger">{{ field.label }}: {{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Тип доставки -->
+                    <div class="delivery-methods">
+                        <div class="method-card {% if form.delivery_type.value == 'pickup' %}active{% endif %}" 
+                             onclick="selectDeliveryType('pickup')">
+                            <input type="radio" name="delivery_type" id="id_delivery_type_0" 
+                                   value="pickup" {% if form.delivery_type.value == 'pickup' %}checked{% endif %}>
+                            <label for="id_delivery_type_0">
+                                <div class="method-info">
+                                    <h4>Самовывоз</h4>
+                                    <p>Заберу заказ из магазина</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="method-card {% if form.delivery_type.value == 'delivery' %}active{% endif %}" 
+                             onclick="selectDeliveryType('delivery')">
+                            <input type="radio" name="delivery_type" id="id_delivery_type_1" 
+                                   value="delivery" {% if form.delivery_type.value == 'delivery' %}checked{% endif %}>
+                            <label for="id_delivery_type_1">
+                                <div class="method-info">
+                                    <h4>Доставка</h4>
+                                    <p>Доставка по указанному адресу</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Дата получения -->
+                    <div class="form-group">
+                        <label for="{{ form.delivery_date.id_for_label }}">Дата получения:</label>
+                        {{ form.delivery_date }}
+                        {% if form.delivery_date.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.delivery_date.errors.as_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Время получения -->
+                    <div class="form-group">
+                        <label for="{{ form.delivery_time.id_for_label }}">Время получения:</label>
+                        {{ form.delivery_time }}
+                        {% if form.delivery_time.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.delivery_time.errors.as_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Адрес доставки -->
+                    <div class="form-group" id="address-field" 
+                         style="display: {% if form.delivery_type.value == 'delivery' %}block{% else %}none{% endif %}">
+                        <label for="{{ form.address.id_for_label }}">Адрес доставки:</label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.address.errors.as_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="confirm-order btn-hover">Подтвердить заказ</button>
+                </form>
+            </div>
+
+            <!-- Информация о заказе -->
+            <div class="order-summary" data-aos="fade-left">
+                <h3>Ваш заказ</h3>
+                <div class="order-items">
+                    {% for item in cart_items %}
+                    <div class="order-item">
+                        <div class="item-image" 
+                             style="background-image: url('{{ item.product.image.url }}')"></div>
+                        <div class="item-details">
+                            <h4>{{ item.product.name }}</h4>
+                            <div class="item-meta">
+                                <span>{{ item.quantity }} × {{ item.price }}₽</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="summary-total">
+                    <div class="total-line">
+                        <span>Итого:</span>
+                        <span>{{ total_price }}₽</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function selectDeliveryType(type) {
+    document.querySelector(`input[name='delivery_type'][value='${type}']`).checked = true;
+    document.querySelectorAll('.method-card').forEach(card => card.classList.remove('active'));
+    document.querySelector(`input[name='delivery_type'][value='${type}']`).closest('.method-card').classList.add('active');
+    toggleAddressField();
+}
+
+function toggleAddressField() {
+    const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+    const addressField = document.getElementById('address-field');
+    addressField.style.display = (deliveryType === 'delivery') ? 'block' : 'none';
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    toggleAddressField();
+    document.querySelectorAll('.method-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}
+  login
+{% endblock %}
+
+{% block content %}
+  <main class="auth-page">
+    <div class="auth-container">
+      <h1 class="section-title">Вход в аккаунт</h1>
+
+      <form class="auth-form" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+          <label>Телефон</label>
+          {{ form.phone_number }}
+        </div>
+
+        <div class="input-group">
+          <label>Пароль</label>
+
+          {{ form.password }}
+        </div>
+
+        <button type="submit" class="btn-hover auth-btn">
+          Войти
+          <!--              <svg class="arrow-icon" viewBox="0 0 24 24">
+              <path d="M10 17l5-5-5-5v10z" />
+            </svg>              -->
+        </button>
+
+        <div class="auth-links">
+          <a href="{% url 'users:register' %}" class="link">Создать аккаунт</a>
+          <a href="#" class="link">Забыли пароль?</a>
+        </div>
+      </form>
+    </div>
+  </main>
+{% endblock %}

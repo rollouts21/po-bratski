@@ -1,0 +1,74 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <main>
+    <section class="cart-page">
+      <div class="cart-container">
+        <!-- Основной блок с товарами -->
+        <div class="cart-items">
+          <h1 class="cart-title">Ваша корзина</h1>
+
+          {% if cart_items %}
+            {% for item in cart_items %}
+              <!-- Элемент корзины -->
+              <div class="cart-item">
+                <div class="item-image" style="background-image: url({{ item.product.image.url }})"></div>
+                <div class="item-info">
+                  <h3>{{ item.product.name }}</h3>
+                  <p class="item-price">₽ {{ item.product.sell_price }}</p>
+                  <div class="quantity-controls">
+                    <form action="{% url 'cart:update' item.product.slug %}" method="post">
+                      {% csrf_token %}
+
+                      <input type="number" value="{{ item.quantity }}" min="1" class="quantity-input" />
+                    </form>
+                  </div>
+                </div>
+                {% comment %} <a href="{% url 'cart:remove' item.product.slug %}">
+                  {% endcomment %}
+                  <form action="{% url 'cart:remove' item.product.slug %}" method="post">
+                    {% csrf_token %}
+                    <button class="remove-btn" type="submit">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                      </svg>
+                    </button>
+                  </form>
+                  {% comment %}
+                </a> {% endcomment %}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <!-- Блок итогов -->
+        <div class="cart-summary">
+          <h2>Итого</h2>
+          <div class="summary-details">
+            <div class="summary-row">
+              <span>Товары:</span>
+              <span>₽ {{ total_price }}</span>
+            </div>
+            {% comment %} <div class="summary-row">
+              <span>Доставка:</span>
+              <span>₽ 500</span>
+            </div> {% endcomment %}
+            <div class="summary-row total">
+              <span>Всего:</span>
+              <span>₽ {{ total_price }}</span>
+            </div>
+          </div>
+          <a href="{% url 'orders:checkout' %}">
+            <button class="checkout-btn btn-hover">
+              Оформить заказ<svg class="arrow-icon" viewBox="0 0 24 24">
+                <path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" />
+              </svg>
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

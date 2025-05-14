@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+{% block content %}
+  <section class="order-success">
+    <div class="container">
+      <h2>Заказ оформлен!</h2>
+      <p>
+        Ваш заказ <strong>№{{ order.id }}</strong> успешно оформлен.
+      </p>
+
+      <div class="order-details">
+        <p>
+          <strong>Дата:</strong> {{ order.created_at|date:'d.m.Y H:i' }}
+        </p>
+        <p>
+          <strong>Способ получения:</strong>
+          {% if order.delivery_type == 'pickup' %}
+            Самовывоз
+          {% else %}
+            Доставка (адрес: {{ order.address }})
+          {% endif %}
+        </p>
+        <p>
+          <strong>Время получения:</strong> {{ order.delivery_date|date:'d.m.Y' }} в {{ order.delivery_time }}
+        </p>
+        <p>
+          <strong>Итого:</strong> {{ order.total_price }} ₽
+        </p>
+      </div>
+
+      <h3>Состав заказа:</h3>
+      <ul class="order-items-list">
+        {% for item in order_items %}
+          <li class="order-item">
+            <div class="item-image" style="background-image: url('{{ item.product.image.url }}')"></div>
+            <div class="item-info">
+              <h4>{{ item.product.name }}</h4>
+              <p>Количество: {{ item.quantity }}</p>
+              <p>Цена: {{ item.price }} ₽</p>
+              <p>
+                <strong>Итого: {{ item.get_cost }} ₽</strong>
+              </p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <a href="#" class="btn btn-primary">Перейти к моим заказам</a>
+    </div>
+  </section>
+
+  <style>
+    .order-details {
+      margin-bottom: 2rem;
+    }
+    
+    .order-items-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .order-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    
+    .item-image {
+      width: 80px;
+      height: 80px;
+      background-size: cover;
+      background-position: center;
+      margin-right: 1rem;
+      border-radius: 6px;
+    }
+    
+    .item-info h4 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    
+    .item-info p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+  </style>
+{% endblock %}

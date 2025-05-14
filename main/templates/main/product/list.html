@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+  <section class="products-page">
+    <div class="products-container">
+      <aside class="products-sidebar">
+        <div class="filters-widget">
+          <h3>Фильтры</h3>
+
+          <!-- Поиск -->
+          <form method="GET" action="{% url 'main:product_list' %}" class="filters-form">
+          <div class="search-box">
+            <input type="search" name="search" value="{{ search_query }}" placeholder="Поиск по названию..." class="search-input" />
+          </div>
+          <h4>Категории цветов</h4>
+          <div class="category-list">
+            {% for category in categories %}
+              <label class="category-item">
+                <input type="checkbox" name="category" value="{{ category.name }}" class="category-checkbox"
+                {% if category.name in selected_categories %}checked{% endif %}/>
+                <span class="custom-checkbox"></span>
+                {{ category.name }}
+              </label>
+            {% endfor %}
+          </div>
+
+          <button class="apply-filters-btn btn-hover" type="submit" >
+            Применить фильтры<svg class="filter-icon" viewBox="0 0 24 24">
+              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z" />
+            </svg>
+          </button>
+          </form>
+
+        </div>
+      </aside>
+
+      <main class="products-main">
+        {% for category, products in grouped_products %}
+          <section class="products-category">
+            <h2 class="category-title">{{ category.name }}</h2>
+            <div class="products-grid">
+              {% for product in products %}
+                
+                  <div class="product-card" data-price="50" data-category="wedding">
+                    <a href="{% url 'main:product_detail' product.slug %}" style="text-decoration: none; color: var(--text-color)">
+                    <div class="product-image" style="background-image: url({{ product.image.url }})"></div>
+                    <div class="product-info">
+                      <h3>{{ product.name }}</h3>
+                      <p class="product-price">{{ product.sell_price }}₽</p>
+                      </a> 
+                     <form action="{% url 'cart:add' product.slug %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+
+                <button class="add-to-cart-btn btn-hover" type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>В корзину
+                </button>
+              </form>
+                    </div>
+                  </div>
+                
+              {% endfor %}
+            </div>
+          </section>
+        {% endfor %}
+      </main>
+    </div>
+  </section>
+{% endblock %}

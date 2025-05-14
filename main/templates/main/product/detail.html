@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}
+  Цветы по-братски
+{% endblock %}
+
+{% block content %}
+  <section class="product-page">
+    <div class="container">
+      <div class="product-grid">
+        <!-- Gallery -->
+        <div class="product-gallery" data-aos="fade-right">
+          <div class="main-image" style="background-image: url({{ product.image.url }})"></div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info" data-aos="fade-left">
+          <h1 class="product-title">{{ product.name }}</h1>
+          <div class="product-price">₽ {{ product.sell_price }}</div>
+
+          <div class="product-options">
+            <div class="option-group">
+              <label>Упаковка:</label>
+              <select class="packaging-select">
+                <option value="standard">Стандартная (включено)</option>
+                <option value="premium">Премиум упаковка (+500₽)</option>
+                <option value="gift">Подарочная коробка (+1000₽)</option>
+              </select>
+            </div>
+
+            <div class="option-group">
+              <label>Количество:</label>
+              <div class="quantity-selector">
+                <button class="qty-btn minus">-</button>
+                <input type="number" class="qty-input" value="1" min="1" />
+                <button class="qty-btn plus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="total-price">
+            Итого: <span class="total">₽ 7 990</span>
+          </div>
+
+          <button class="add-to-cart-btn btn-hover"><svg>...</svg>Добавить в корзину</button>
+
+          {% if product.description %}
+            <div class="product-description">
+              <h3>Описание</h3>
+              <p>{{ product.description }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Same footer as index.html -->
+
+  {% comment %} <script>
+    // Product Logic
+    const packagingSelect = document.querySelector('.packaging-select')
+    const qtyInput = document.querySelector('.qty-input')
+    const totalElement = document.querySelector('.total')
+    const basePrice = 7990
+    
+    function updateTotal() {
+      const packagingPrice = {
+        standard: 0,
+        premium: 500,
+        gift: 1000
+      }[packagingSelect.value]
+    
+      const total = (basePrice + packagingPrice) * qtyInput.value
+      totalElement.textContent = `₽ ${total.toLocaleString()}`
+    }
+    
+    // Event Listeners
+    packagingSelect.addEventListener('change', updateTotal)
+    qtyInput.addEventListener('change', updateTotal)
+    document.querySelectorAll('.qty-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        qtyInput.value = btn.classList.contains('plus') ? ++qtyInput.value : Math.max(1, --qtyInput.value)
+        updateTotal()
+      })
+    })
+  </script> {% endcomment %}
+{% endblock %}

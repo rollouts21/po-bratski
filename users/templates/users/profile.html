@@ -1,0 +1,77 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <main class="profile-page">
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="avatar-section">
+          <h1 class="user-name">{{ user.full_name }}</h1>
+        </div>
+
+        <div class="profile-info">
+          <div class="info-item">
+            <span class="info-label">Телефон:</span>
+            <span class="info-value">{{ user.phone_number }}</span>
+          </div>
+          {% if user.email %}
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value">{{ user.email }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if orders %}
+        <section class="order-history">
+          <h2 class="section-subtitle">История заказов</h2>
+
+          <div class="order-list">
+            {% for order in orders %}
+              <div class="order-card">
+                <div class="order-meta">
+                  <span class="order-number">Заказ №{{ order.id }}</span>
+                  <span class="order-date">{{ order.created_at|date:'d.m.Y H:i' }}</span>
+                  <span class="order-status completed">
+                    {% comment %} {% if order.status == 'pending' %}
+                      Ожидание
+                    {% elif order.status == 'confirmed' %}
+                      успешно
+                    {% elif order.status == 'rejected' %}
+                      неуспешно
+                    {% endif %} {% endcomment %}
+                  </span>
+                </div>
+                <div class="order-content">
+                  <div class="order-items">
+                    {% for item in order.items.all %}
+                      <div class="order-item">
+                        <div class="item-image">
+                          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="order-item-image" />
+                        </div>
+                        <div class="item-info">
+                          <span class="item-title">{{ item.product.name }}</span>
+                          <div class="item-details">
+                            <span>{{ item.quantity }} × {{ item.price }}₽</span>
+                            <span class="item-status available">В наличии</span>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  {% comment %} <div class="order-total">
+                    <span>Итого:</span>
+                    <span>{{ item.get_cost }}₽</span>
+                  </div> {% endcomment %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    </div>
+    <a href="{% url 'users:logout' %}" class="logout-btn"><p>Выход</p></a>
+  </main>
+{% endblock %}
