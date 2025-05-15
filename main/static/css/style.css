@@ -53,6 +53,7 @@ body {
   box-shadow: 0 2px 15px var(--shadow-color);
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
+  gap: 20px;
 }
 
 .logo {
@@ -62,16 +63,12 @@ body {
   /*color: var(--primary-color);*/
   text-decoration: none;
   transition: opacity 0.3s;
+  height: auto;
 }
 
 .logo p {
   color: var(--text-color);
   padding-top: 10px;
-}
-
-.logo {
-  /*max-width: 180px; !* Регулируйте по размеру вашего лого *!*/
-  height: auto;
 }
 
 .logo-svg {
@@ -141,11 +138,6 @@ body {
   padding-top: 80px;
 }
 
-/* .hero-content {
-  max-width: 800px;
-  padding: 2rem;
-} */
-
 .hero h1 {
   font-size: 3.5rem;
   color: white;
@@ -174,12 +166,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
   gap: 2rem;
   justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .categories-grid {
-    justify-content: normal;
-  }
+  position: relative;
 }
 
 .category-card {
@@ -472,13 +459,9 @@ body {
     display: flex;
   }
 
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .products-grid {
+  /* .products-grid {
     grid-template-columns: 1fr;
-  }
+  } */
 
   .footer-content {
     grid-template-columns: 1fr;
@@ -551,12 +534,6 @@ body {
 
 .btn-hover:hover {
   background: #343a40 !important; /* Темно-серый */
-}
-
-/* Обновленные стили для header */
-.header {
-  /* ... остальные стили ... */
-  gap: 20px; /* Добавляем промежуток между элементами */
 }
 
 .nav-container {
@@ -678,6 +655,7 @@ body {
     grid-auto-columns: minmax(250px, 1fr);
     -webkit-overflow-scrolling: touch;
     padding-bottom: 15px;
+    justify-content: normal;
   }
 
   .category-card {
@@ -696,10 +674,6 @@ body {
   }
 }
 
-.categories-grid {
-  position: relative;
-}
-
 /* Градиентные тени по краям */
 .categories-grid::after {
   content: "";
@@ -711,8 +685,8 @@ body {
   pointer-events: none;
 }
 
-[data-theme="dark"] .categories-grid::after {
-}
+/* [data-theme="dark"] .categories-grid::after {
+} */
 
 /* Обновленные стили */
 .whatsapp-link {
@@ -1458,6 +1432,10 @@ body {
 
 .products-category {
   margin-bottom: 3rem;
+  margin-bottom: 3rem;
+  opacity: 1;
+  max-height: 1000px;
+  transition: all 0.4s ease-in-out;
 }
 
 .products-category h2 {
@@ -1564,13 +1542,6 @@ body {
 
 .apply-filters-btn:hover .filter-icon {
   transform: rotate(-15deg);
-}
-
-.products-category {
-  margin-bottom: 3rem;
-  opacity: 1;
-  max-height: 1000px;
-  transition: all 0.4s ease-in-out;
 }
 
 .products-category.hidden-category {

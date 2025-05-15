@@ -13,7 +13,8 @@ SECRET_KEY = "django-insecure-$ly_mbe5@x!$k_#-_v-&o4$h#w@*jzj^^di^d6u&u4!v+-)r)(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://nasty-results-sneeze.loca.lt"]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_AGE = 604800  # 1 неделя в секундах

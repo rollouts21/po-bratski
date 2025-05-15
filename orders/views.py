@@ -6,6 +6,15 @@ from .forms import OrderForm
 from .models import Order, OrderItem
 from main.models import Product
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import requests
+import logging
+
+from .telegram import send_order_to_telegram
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -63,7 +72,11 @@ def checkout(request):
                     quantity=item["quantity"],
                     price=product.price,  # ← обращаемся к атрибуту объекта
                 )
+
             cart.clear()
+            print("FUNS STAART")
+            logger.debug("FUNC STAAAR")
+            send_order_to_telegram(order.id)
             return redirect("orders:order_success", order_id=order.id)
 
     return render(
@@ -93,3 +106,45 @@ def order_success(request, order_id):
             "order_items": order_items,
         },
     )
+
+
+@csrf_exempt
+def telegram_webhook(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        # Обработка callback-запроса
+        if "callback_query" in data:
+            callback_data = data["callback_query"]["data"]
+            if callback_data.startswith("confirm_order_"):
+                order_id = int(callback_data.split("_")[2])
+                try:
+                    order = Order.objects.get(id=order_id)
+                    order.status = "confirmed"
+                    order.save()
+                    send_confirmation_message(order_id)
+                except Order.DoesNotExist:
+                    pass
+
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "invalid request"}, status=400)
+
+
+def send_confirmation_message(order_id):
+    token = settings.TELEGRAM_BOT_TOKEN
+    chat_id = settings.TELEGRAM_CHAT_ID
+    url = f"https://api.telegram.org/bot {token}/sendMessage"
+
+    try:
+        order = Order.objects.get(id=order_id)
+        user = order.user
+
+        message = f"✅ <b>Заказ #{order_id} подтвержден</b>\n"
+        message += f"👤 Клиент: {user.full_name}\n"
+        message += f"💰 Итоговая сумма: {order.total_price} ₽"
+
+        data = {"chat_id": chat_id, "text": message, "parse_mode": "HTML"}
+
+        requests.post(url, json=data)
+    except Exception as e:
+        print(f"Ошибка отправки уведомления о подтверждении: {e}")
