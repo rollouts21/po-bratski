@@ -17,12 +17,14 @@
                 <div class="item-image" style="background-image: url({{ item.product.image.url }})"></div>
                 <div class="item-info">
                   <h3>{{ item.product.name }}</h3>
-                  <p class="item-price">₽ {{ item.product.sell_price }}</p>
+                  <p class="item-price">{{ item.product.sell_price }} ₽</p>
+
                   <div class="quantity-controls">
                     <form action="{% url 'cart:update' item.product.slug %}" method="post">
                       {% csrf_token %}
-
-                      <input type="number" value="{{ item.quantity }}" min="1" class="quantity-input" />
+                      <button class="qty-btn minus" type="button">-</button>
+                      <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.quantity }}" class="quantity-input" />
+                      <button class="qty-btn plus" type="button">+</button>
                     </form>
                   </div>
                 </div>
@@ -39,6 +41,61 @@
                   {% comment %}
                 </a> {% endcomment %}
               </div>
+              <script> 
+                const qtyInput = document.querySelector('.quantity-input')
+                const minusBtn = document.querySelector('.qty-btn.minus')
+                const plusBtn = document.querySelector('.qty-btn.plus')
+               // const button = document.querySelector('.checkout-btn')
+              
+                function updateQuantity(change) {
+                  let currentValue = parseInt(qtyInput.value) || 1
+                  currentValue += change
+                  
+                  if (currentValue < 1) currentValue = 1
+                  let qa = {{ item.product.quantity }}
+                  if (currentValue >= qa) {
+                    // button.textContent = "К сожалению, такого количества у нас нет"
+                    // button.disabled = true;
+                      plusBtn.disabled = true;
+                  } else {
+                    // button.textContent = "Оформить заказ";
+                    // button.disabled = false;
+                    plusBtn.disabled = false;
+                  }
+                
+                  qtyInput.value = currentValue
+                  
+                  let ma = {{ item.product.sell_price }} * currentValue
+                 // total.textContent = ma + " ₽" 
+                }
+
+                minusBtn.addEventListener('click', () => updateQuantity(-1))
+                plusBtn.addEventListener('click', () => updateQuantity(1))
+
+                qtyInput.addEventListener('input', () => {
+                  
+                  const value = parseInt(qtyInput.value) || 1
+                  let qa = {{ item.product.quantity }}
+                  if (value >= qa) {
+                    plusBtn.disabled = true;
+                  } else {
+                    plusBtn.disabled = false;
+                  }
+                  qtyInput.value = value > 0 ? value : 1
+                  if (value >=   qa) {
+                    qtyInput.value = qa
+                  } else {
+                  qtyInput.value = value
+                  }
+                  // total.textContent = {{ item.product.sell_price }} * value + " ₽" // Обновляем итог
+                })
+
+                form.addEventListener('submit', function(e) {
+                  updateQuantity()
+                  console.log('Отправляем quantity:', qtyInput.value);
+                  if(qtyInput.value < 1) qtyInput.value = 1
+                })
+              </script>
             {% endfor %}
           {% endif %}
         </div>
@@ -49,7 +106,7 @@
           <div class="summary-details">
             <div class="summary-row">
               <span>Товары:</span>
-              <span>₽ {{ total_price }}</span>
+              <span class="total">{{ total_price }} ₽</span>
             </div>
             {% comment %} <div class="summary-row">
               <span>Доставка:</span>
@@ -57,18 +114,51 @@
             </div> {% endcomment %}
             <div class="summary-row total">
               <span>Всего:</span>
-              <span>₽ {{ total_price }}</span>
+              <span class="total">{{ total_price }} ₽</span>
             </div>
           </div>
-          <a href="{% url 'orders:checkout' %}">
-            <button class="checkout-btn btn-hover">
-              Оформить заказ<svg class="arrow-icon" viewBox="0 0 24 24">
-                <path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" />
-              </svg>
-            </button>
-          </a>
+
+          {% if user.is_authenticated %}
+            <a href="{% url 'orders:checkout' %}" style="text-decoration: none;">
+              <button class="checkout-btn btn-hover">
+                Оформить заказ<svg class="arrow-icon" viewBox="0 0 24 24">
+                  <path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" />
+                </svg>
+              </button>
+            </a>
+          {% else %}
+            <a href="{% url 'users:login' %}" style="text-decoration: none;">
+              <button class="checkout-btn btn-hover">
+                Оформить заказ<svg class="arrow-icon" viewBox="0 0 24 24">
+                  <path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" />
+                </svg>
+              </button>
+            </a>
+          {% endif %}
         </div>
       </div>
     </section>
   </main>
+
+  <script>
+    // document.querySelectorAll('.qty-btn').forEach((btn) => {
+      //btn.addEventListener('click', function () {
+        // const form = this.closest('form')
+        //const input = form.querySelector('.quantity-input')
+   //     let value = parseInt(input.value) || 1
+    
+     //   if (this.classList.contains('plus')) {
+       //   value++
+       // } else {
+       //   value = Math.max(1, value - 1)
+      //  }
+    
+      //  input.value = value
+      //form.submit() // Автоматическая отправка формы
+    //  })
+  //  })
+
+   
+    
+  </script>
 {% endblock %}

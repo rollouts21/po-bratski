@@ -43,7 +43,7 @@ class Cart:
                 "price": float(item["price"]),
             }
 
-    def add(self, product, quantity=1):
+    def add(self, product, quantity):
         slug = str(product.slug)
         if slug not in self.cart:
             self.cart[slug] = {"quantity": 0, "price": str(product.sell_price())}
@@ -58,6 +58,7 @@ class Cart:
     def update(self, slug, quantity):
         if slug in self.cart:
             if quantity > 0:
+                print(self.cart[slug]["quantity"])
                 self.cart[slug]["quantity"] = quantity
             else:
                 del self.cart[slug]
@@ -84,12 +85,23 @@ class Cart:
 def add_to_cart(request, slug):
     cart = Cart(request)
     product = get_object_or_404(Product, slug=slug)
-    cart.add(product)
+
+    print("-" * 50)
+    print("Raw POST data:", request.POST)
+    print("Received quantity:", request.POST.get("quantity"))
+
+    quantity = int(request.POST.get("quantity", 1))
+
+    print(
+        f"Добавление в корзину: {product.name}, количество: {quantity}"
+    )  # Отладочный вывод
+
+    cart.add(product, quantity=quantity)
     return JsonResponse(
         {
             "status": "success",
             "cart_total": cart.get_total_price(),
-            "product_qty": cart.cart[str(slug)]["quantity"],
+            "quantity": cart.cart.get(str(slug), {}).get("quantity", 0),
             "total_items": cart.get_total_items(),
         }
     )

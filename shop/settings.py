@@ -27,6 +27,7 @@ CSRF_USE_SESSIONS = True
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     "cart",
     "orders",
     "telegramBot",
+    "ckeditor",
 ]
 
 MIDDLEWARE = [

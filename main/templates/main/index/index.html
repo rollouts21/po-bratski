@@ -29,7 +29,10 @@
                 <img src="{{ product_disc.image.url }}" alt="Акция" class="promo-image" />
                 <div class="promo-content">
                   <h3>{{ product_disc.name }}</h3>
-                  <div class="promo-timer">{{ product_disc.sell_price }}₽</div>
+                  <div class="promo-timer">{{ product_disc.sell_price }} ₽</div>
+                  <div class="promo-timer">
+                    <p class="old-price">{{ product_disc.price }} ₽</p>
+                  </div>
                   <form action="{% url 'cart:add' product_disc.slug %}" method="post" class="add-to-cart-form" data-product-slug="{{ product_disc.slug }}">
                     {% csrf_token %}
                     <button class="btn-hover promo-btn add-to-cart-btn" type="submit">
@@ -344,27 +347,11 @@ c-45 36 -187 99 -254 113 -77 16 -121 17 -177 4z m208 -170 c30 -11 55 -24 55
   </section>
 
   <section class="map-section">
-    <h2 class="section-title">📍 Наши магазины</h2>
-    <div id="yandexMap" style="height: 400px"></div>
+    <h2 class="section-title">📍 Как нас найти?</h2>
+    <div id="yandexMap" style="height: 500px;">
+      <div style="position:relative;overflow:hidden;">
+        <a href="https://yandex.ru/maps/org/tsvety_po_bratski/114592264888/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Цветы по-братски</a><a href="https://yandex.ru/maps/75/vladivostok/category/flower_shop/184108325/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Магазин цветов во Владивостоке</a><iframe src="https://yandex.ru/map-widget/v1/org/tsvety_po_bratski/114592264888/?ll=131.959469%2C43.103867&z=19.11" width="100%" height="500" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>
+      </div>
+    </div>
   </section>
-
-  <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_ключ&lang=ru_RU"></script>
-  <script>
-    ymaps.ready(init)
-    function init() {
-      const map = new ymaps.Map('yandexMap', {
-        center: [55.76, 37.64],
-        zoom: 10
-      })
-    
-      // Добавление меток
-      shops.forEach((shop) => {
-        map.geoObjects.add(
-          new ymaps.Placemark([shop.lat, shop.lon], {
-            balloonContent: shop.address
-          })
-        )
-      })
-    }
-  </script>
 {% endblock %}

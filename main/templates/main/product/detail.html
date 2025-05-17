@@ -8,7 +8,7 @@
 
 {% block content %}
   <section class="product-page">
-    <div class="container">
+    <div class="container" style="margin-top: 25px;">
       <div class="product-grid">
         <!-- Gallery -->
         <div class="product-gallery" data-aos="fade-right">
@@ -18,44 +18,113 @@
         <!-- Product Info -->
         <div class="product-info" data-aos="fade-left">
           <h1 class="product-title">{{ product.name }}</h1>
-          <div class="product-price">₽ {{ product.sell_price }}</div>
+          <div class="product-price">{{ product.sell_price }} ₽</div>
 
           <div class="product-options">
-            <div class="option-group">
+            {% comment %} <div class="option-group">
               <label>Упаковка:</label>
-              <select class="packaging-select">
+              {% comment %} <select class="packaging-select">
                 <option value="standard">Стандартная (включено)</option>
                 <option value="premium">Премиум упаковка (+500₽)</option>
                 <option value="gift">Подарочная коробка (+1000₽)</option>
-              </select>
-            </div>
+              </select> {% endcomment %}
+              {% comment %}
+            </div> {% endcomment %}
 
             <div class="option-group">
               <label>Количество:</label>
               <div class="quantity-selector">
                 <button class="qty-btn minus">-</button>
-                <input type="number" class="qty-input" value="1" min="1" />
+                <input type="number" class="qty-input" name="quantity" value="1" min="1" />
                 <button class="qty-btn plus">+</button>
               </div>
             </div>
-          </div>
 
-          <div class="total-price">
-            Итого: <span class="total">₽ 7 990</span>
-          </div>
-
-          <button class="add-to-cart-btn btn-hover"><svg>...</svg>Добавить в корзину</button>
-
-          {% if product.description %}
-            <div class="product-description">
-              <h3>Описание</h3>
-              <p>{{ product.description }}</p>
+            <div class="total-price">
+              Итого: <span class="total">{{ product.sell_price }} ₽</span>
             </div>
-          {% endif %}
+
+            <form action="{% url 'cart:add' product.slug %} " method="post" class="add-to-cart-form" id="cart-form">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" class="quantity-field" value="1" id="hidden-quantity" />
+              <button class="add-to-cart-btn btn-hover" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                </svg>Добавить в корзину
+              </button>
+            </form>
+            {% if product.description %}
+              <div class="product-description" style="margin-top: 50px;">
+                <h2>Состав:</h2>
+                <br />
+                <p>{{ product.description|safe }}</p>
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <script>
+    // Получаем элементы
+    const minusBtn = document.querySelector('.qty-btn.minus')
+    const plusBtn = document.querySelector('.qty-btn.plus')
+    const qtyInput = document.querySelector('.qty-input')
+    const quantityField = document.querySelector('.quantity-field')
+    const total = document.querySelector('.total')
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                </svg>`;
+    const button = document.querySelector('.add-to-cart-btn');
+    // Функция обновления значения
+    function updateQuantity(change) {
+      let currentValue = parseInt(qtyInput.value) || 1
+      currentValue += change
+      
+      if (currentValue < 1) currentValue = 1
+      let qa = {{ product.quantity }}
+      if (currentValue > qa) {
+        button.textContent = "К сожалению, такого количества у нас нет"
+        button.disabled = true;
+      } else {
+        button.innerHTML = `${svg} Добавить в корзину`;
+        button.disabled = false;
+      }
+    
+      qtyInput.value = currentValue
+      quantityField.value = currentValue // Обновляем скрытое поле
+      let ma = {{ product.sell_price }} * currentValue
+      total.textContent = ma + " ₽" 
+    }
+    
+    // Обработчики событий
+    minusBtn.addEventListener('click', () => updateQuantity(-1))
+    plusBtn.addEventListener('click', () => updateQuantity(1))
+    
+    // Обновление при ручном вводе
+    qtyInput.addEventListener('input', () => {
+      
+      const value = parseInt(qtyInput.value) || 1
+      let qa = {{ product.quantity }}
+      if (value > qa) {
+        button.textContent = "К сожалению, такого количества у нас нет"
+        button.disabled = true;
+      } else {
+        button.innerHTML = `${svg} Добавить в корзину`;
+        button.disabled = false;
+      }
+      qtyInput.value = value > 0 ? value : 1
+      quantityField.value = value
+      total.textContent = {{ product.sell_price }} * value + " ₽" // Обновляем итог
+    })
+
+    form.addEventListener('submit', function(e) {
+    updateQuantity()
+    console.log('Отправляем quantity:', quantityField.value);
+    if(quantityField.value < 1) quantityField.value = 1
+  })
+  </script>
 
   <!-- Same footer as index.html -->
 

@@ -1,90 +1,93 @@
 {% extends 'main/base.html' %}
+{% load static %}
+
 {% block content %}
   <section class="order-success">
     <div class="container">
-      <h2>Заказ оформлен!</h2>
-      <p>
-        Ваш заказ <strong>№{{ order.id }}</strong> успешно оформлен.
-      </p>
+      <div class="order-container">
+        <div class="order-header">
+          <h2 class="order-title">Заказ оформлен!</h2>
+          <div class="order-status">Успешно</div>
+        </div>
 
-      <div class="order-details">
-        <p>
-          <strong>Дата:</strong> {{ order.created_at|date:'d.m.Y H:i' }}
+        <p class="order-description">
+          Ваш заказ <strong>№{{ order.id }}</strong> успешно оформлен.
         </p>
-        <p>
-          <strong>Способ получения:</strong>
-          {% if order.delivery_type == 'pickup' %}
-            Самовывоз
-          {% else %}
-            Доставка (адрес: {{ order.address }})
-          {% endif %}
-        </p>
-        <p>
-          <strong>Время получения:</strong> {{ order.delivery_date|date:'d.m.Y' }} в {{ order.delivery_time }}
-        </p>
-        <p>
-          <strong>Итого:</strong> {{ order.total_price }} ₽
-        </p>
-      </div>
 
-      <h3>Состав заказа:</h3>
-      <ul class="order-items-list">
-        {% for item in order_items %}
-          <li class="order-item">
-            <div class="item-image" style="background-image: url('{{ item.product.image.url }}')"></div>
-            <div class="item-info">
-              <h4>{{ item.product.name }}</h4>
-              <p>Количество: {{ item.quantity }}</p>
-              <p>Цена: {{ item.price }} ₽</p>
-              <p>
-                <strong>Итого: {{ item.get_cost }} ₽</strong>
-              </p>
+        <div class="order-details">
+          <div class="detail-card">
+            <div class="detail-header">
+              <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="detail-title">Дата</span>
             </div>
-          </li>
-        {% endfor %}
-      </ul>
+            <p class="detail-value">{{ order.created_at|date:'d.m.Y H:i' }}</p>
+          </div>
 
-      <a href="#" class="btn btn-primary">Перейти к моим заказам</a>
+          <div class="detail-card">
+            <div class="detail-header">
+              <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="detail-title">Время получения</span>
+            </div>
+            <p class="detail-value">{{ order.delivery_date|date:'d.m.Y' }} в {{ order.delivery_time }}</p>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-header">
+              <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              </svg>
+              <span class="detail-title">Способ получения</span>
+            </div>
+            <p class="detail-value">
+              {% if order.delivery_type == 'pickup' %}
+                Самовывоз
+              {% else %}
+                Доставка (адрес: {{ order.address }})
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-header">
+              <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="detail-title">Итого</span>
+            </div>
+            <p class="detail-value text-xl font-bold">{{ order.total_price }} ₽</p>
+          </div>
+        </div>
+
+        <h3 class="order-items-title">Состав заказа:</h3>
+
+        <ul class="order-items">
+          {% for item in order_items %}
+            <li class="order-item">
+              <div class="item-image" style="background-image: url('{{ item.product.image.url }}')"></div>
+              <div class="item-info">
+                <h4 class="item-name">{{ item.product.name }}</h4>
+                <div class="item-details">
+                  <div class="item-detail">Количество: {{ item.quantity }}</div>
+                  <div class="item-detail">Цена: {{ item.price }} ₽</div>
+                </div>
+                <div class="item-price">{{ item.get_cost }} ₽</div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="order-actions">
+          <a href="{% url 'users:profile' %}" class="action-button">
+            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>Перейти к моим заказам
+          </a>
+        </div>
+      </div>
     </div>
   </section>
-
-  <style>
-    .order-details {
-      margin-bottom: 2rem;
-    }
-    
-    .order-items-list {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .order-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #f9f9f9;
-    }
-    
-    .item-image {
-      width: 80px;
-      height: 80px;
-      background-size: cover;
-      background-position: center;
-      margin-right: 1rem;
-      border-radius: 6px;
-    }
-    
-    .item-info h4 {
-      margin: 0;
-      font-size: 1.1rem;
-    }
-    
-    .item-info p {
-      margin: 0.3rem 0;
-      font-size: 0.95rem;
-    }
-  </style>
 {% endblock %}

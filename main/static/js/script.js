@@ -127,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Добавьте в script.js
 function initInfiniteCategories() {
   const grid = document.getElementById("categoriesGrid");
   const cards = grid.children;
@@ -162,33 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initInfiniteCategories();
 });
 
-// Логика корзины
-let cartCount = 0;
-
-// Обновление счетчика
-function updateCartCounter() {
-  const counter = document.querySelector(".cart-counter");
-  counter.textContent = cartCount;
-  counter.style.display = cartCount > 0 ? "flex" : "none";
-}
-
-// Обработчик добавления в корзину
-// document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
-//   btn.addEventListener("click", () => {
-//     cartCount++;
-//     updateCartCounter();
-//     this.style.transform = "scale(0.95)";
-//     setTimeout(() => (this.style.transform = "scale(1)"), 200);
-
-//     // Анимация иконки
-//     const cart = document.querySelector(".floating-cart");
-//     cart.style.transform = "scale(1.2)";
-//     setTimeout(() => (cart.style.transform = "scale(1)"), 200);
-//   });
-// });
-
-// // Инициализация счетчика
-// updateCartCounter();
 document.addEventListener("DOMContentLoaded", () => {
   const cartCounter = document.querySelector(".cart-counter");
   const cartForms = document.querySelectorAll(".add-to-cart-form");
@@ -208,6 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Обработчик добавления товара
   const handleAddToCart = async (form, slug) => {
     const submitBtn = form.querySelector('button[type="submit"]');
+    const formData = new FormData(form); // Добавляем FormData
+
     if (!submitBtn) return;
 
     submitBtn.disabled = true;
@@ -216,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(form.action, {
         method: "POST",
+        body: formData,
         headers: {
           "X-Requested-With": "XMLHttpRequest",
           "X-CSRFToken": CSRFToken,

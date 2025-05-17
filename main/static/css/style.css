@@ -502,6 +502,8 @@ body {
   .product-card {
     scroll-snap-align: start;
     min-width: 250px;
+    max-height: 550px;
+    min-height: 550px;
   }
 
   /* Стилизация скроллбара */
@@ -900,12 +902,18 @@ body {
   justify-content: center;
   gap: 1rem;
   margin: 1.5rem 0;
-  font-family: "Courier New", monospace;
+  font-size: 25px;
+  /* padding-right: -150px; */
+}
+
+.promo-timer .old-price {
+  text-decoration: line-through #ff4444;
+  text-decoration-thickness: 3px;
 }
 
 .promo-timer::before {
-  content: "🕒";
-  margin-right: 8px;
+  content: "";
+  margin-right: -20px;
 }
 
 .promo-btn {
@@ -1754,7 +1762,8 @@ body {
   }
 
   .item-image {
-    width: 100%;
+    min-width: 150px;
+    max-width: 150px;
     height: 200px;
   }
 
@@ -1838,17 +1847,18 @@ body {
 /* Стили профиля */
 .profile-page {
   padding: 6rem 5% 4rem;
+  min-height: 100vh;
 }
 
 .profile-header {
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* grid-template-columns: auto 1fr; */
   gap: 3rem;
   align-items: center;
   margin-bottom: 3rem;
 }
 
-.avatar-wrapper {
+/* .avatar-wrapper {
   position: relative;
   width: 150px;
   height: 150px;
@@ -1880,9 +1890,10 @@ body {
   width: 20px;
   height: 20px;
   fill: white;
-}
+} */
 
 .user-name {
+  text-align: center;
   font-size: 2rem;
   margin-bottom: 1rem;
 }
@@ -2473,6 +2484,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
 }
 
 .qty-btn {

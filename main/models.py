@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 class Category(models.Model):
@@ -39,7 +40,7 @@ class Product(models.Model):
     image = models.ImageField(
         upload_to="products/%Y/%m/%d", blank=True, verbose_name="Изображение"
     )
-    description = models.TextField(
+    description = RichTextField(
         blank=True, verbose_name="Описание букета (не обязательно)"
     )
     price = models.DecimalField(
