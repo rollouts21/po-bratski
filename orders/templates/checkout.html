@@ -75,10 +75,7 @@
 
                     <!-- Адрес доставки -->
                     <div class="form-group" id="address-field" 
-                         style="display: {% if form.delivery_type.value == 'delivery' %}block{% else %}none{% endif %}">
-                        
-            
-
+                        style="display: block">
             <label for="{{ form.comment.id_for_label }}">Комментарий</label>
             {{ form.comment }}
                     </div>
@@ -94,7 +91,7 @@
                     {% for item in cart_items %}
                     <div class="order-item">
                         <div class="item-image" 
-                             style="background-image: url('{{ item.product.image.url }}')"></div>
+                            style="background-image: url('{{ item.product.image.url }}')"></div>
                         <div class="item-details">
                             <h4>{{ item.product.name }}</h4>
                             <div class="item-meta">
@@ -115,23 +112,23 @@
     </div>
 </section>
 
-<script>
+ <script>
 function selectDeliveryType(type) {
     document.querySelector(`input[name='delivery_type'][value='${type}']`).checked = true;
     document.querySelectorAll('.method-card').forEach(card => card.classList.remove('active'));
     document.querySelector(`input[name='delivery_type'][value='${type}']`).closest('.method-card').classList.add('active');
-    toggleAddressField();
+    //toggleAddressField();
 }
 
-function toggleAddressField() {
-    const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
-    const addressField = document.getElementById('address-field');
-    addressField.style.display = (deliveryType === 'delivery') ? 'block' : 'none';
-}
+// function toggleAddressField() {
+   // const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+    //const addressField = document.getElementById('address-field');
+    //addressField.style.display = (deliveryType === 'delivery') ? 'block' : 'none';
+//}
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
-    toggleAddressField();
+   // toggleAddressField();
     document.querySelectorAll('.method-card').forEach(card => {
         card.addEventListener('click', () => {
             document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
@@ -139,5 +136,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-</script>
+</script> 
 {% endblock %}

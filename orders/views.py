@@ -124,7 +124,7 @@ def telegram_webhook(request):
                     order = Order.objects.get(id=order_id)
                     order.status = "confirmed"
                     order.save()
-                    send_confirmation_message(order_id)
+                    send_success_message(order_id)
                 except Order.DoesNotExist:
                     pass
             if callback_data.startswith("reject_order_"):
@@ -133,7 +133,7 @@ def telegram_webhook(request):
                     order = Order.objects.get(id=order_id)
                     order.status = "rejected"
                     order.save()
-                    send_confirmation_message(order_id)
+                    send_reject_message(order_id)
                 except Order.DoesNotExist:
                     pass
 
@@ -142,8 +142,8 @@ def telegram_webhook(request):
 
 
 def send_success_message(order_id):
-    token = settings.TELEGRAM_BOT_TOKEN
-    chat_id = settings.TELEGRAM_CHAT_ID
+    token = "7931647653:AAFwoeZ_HnZLGFMy4Ncv_giCOrxZKAUvqgA"
+    chat_id = "820559840"
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     try:
@@ -162,8 +162,8 @@ def send_success_message(order_id):
 
 
 def send_reject_message(order_id):
-    token = settings.TELEGRAM_BOT_TOKEN
-    chat_id = settings.TELEGRAM_CHAT_ID
+    token = "7931647653:AAFwoeZ_HnZLGFMy4Ncv_giCOrxZKAUvqgA"
+    chat_id = "820559840"
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     try:
