@@ -27,7 +27,12 @@ class Order(models.Model):
     delivery_type = models.CharField(max_length=20, choices=DELIVERY_CHOICES)
     delivery_date = models.DateField()
     delivery_time = models.TimeField()
-    address = models.TextField(blank=True, null=True)
+
+    comment = models.TextField(
+        blank=True,
+        verbose_name="Комментарий",
+        help_text="Дополнительная информация для доставки",
+    )
     total_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -54,15 +59,6 @@ class Order(models.Model):
         """
         self.total_price = self.get_total_cost()
         self.save(update_fields=["total_price"])
-
-    def clean(self):
-        """
-        Валидация адреса в зависимости от типа доставки
-        """
-        if self.delivery_type == "pickup" and self.address:
-            raise ValidationError("При самовывозе адрес указывать не нужно")
-        if self.delivery_type == "delivery" and not self.address:
-            raise ValidationError("Укажите адрес для доставки")
 
     class Meta:
         indexes = [

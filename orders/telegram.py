@@ -26,8 +26,23 @@ def send_order_to_telegram(order_id):
         message += f"🕒 <b>Время доставки:</b> {order.delivery_time}\n"
         message += f"🚚 <b>Тип заказа:</b> {dict(Order.DELIVERY_CHOICES)[order.delivery_type]}\n"
 
-        if order.address:
-            message += f"📍 <b>Адрес:</b> {order.address}\n"
+        address_parts = []
+        if user.city:
+            address_parts.append(f"Г. {user.city}")
+        if user.street:
+            address_parts.append(f"Ул. {user.street}")
+        if user.house:
+            address_parts.append(f"Д. {user.house}")
+        if user.entrance:
+            address_parts.append(f"Подъезд {user.entrance}")
+        if user.floor:
+            address_parts.append(f"Этаж {user.floor}")
+        if user.apartment:
+            address_parts.append(f"Кв. {user.apartment}")
+
+        # Формируем сообщение только если есть хотя бы город или улица
+        if address_parts:
+            message += f"📍 <b>Адрес:</b> {', '.join(address_parts)}\n"
 
         message += "\n<b>Состав заказа:</b>\n"
         for item in OrderItem.objects.filter(order=order):
@@ -44,7 +59,11 @@ def send_order_to_telegram(order_id):
                     {
                         "text": "✅ Подтвердить выдачу",
                         "callback_data": f"confirm_order_{order_id}",
-                    }
+                    },
+                    {
+                        "text": "❌ Отклонить",
+                        "callback_data": f"reject_order_{order_id}",
+                    },
                 ]
             ]
         }

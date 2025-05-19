@@ -12,6 +12,7 @@ import json
 import requests
 import logging
 
+from main.models import Product
 from .telegram import send_order_to_telegram
 
 logger = logging.getLogger(__name__)
@@ -77,6 +78,7 @@ def checkout(request):
             print("FUNS STAART")
             logger.debug("FUNC STAAAR")
             send_order_to_telegram(order.id)
+
             return redirect("orders:order_success", order_id=order.id)
 
     return render(
@@ -125,21 +127,49 @@ def telegram_webhook(request):
                     send_confirmation_message(order_id)
                 except Order.DoesNotExist:
                     pass
+            if callback_data.startswith("reject_order_"):
+                order_id = int(callback_data.split("_")[2])
+                try:
+                    order = Order.objects.get(id=order_id)
+                    order.status = "rejected"
+                    order.save()
+                    send_confirmation_message(order_id)
+                except Order.DoesNotExist:
+                    pass
 
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "invalid request"}, status=400)
 
 
-def send_confirmation_message(order_id):
+def send_success_message(order_id):
     token = settings.TELEGRAM_BOT_TOKEN
     chat_id = settings.TELEGRAM_CHAT_ID
-    url = f"https://api.telegram.org/bot {token}/sendMessage"
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     try:
         order = Order.objects.get(id=order_id)
         user = order.user
 
         message = f"✅ <b>Заказ #{order_id} подтвержден</b>\n"
+        message += f"👤 Клиент: {user.full_name}\n"
+        message += f"💰 Итоговая сумма: {order.total_price} ₽"
+
+        data = {"chat_id": chat_id, "text": message, "parse_mode": "HTML"}
+
+        requests.post(url, json=data)
+    except Exception as e:
+        print(f"Ошибка отправки уведомления о подтверждении: {e}")
+
+
+def send_reject_message(order_id):
+    token = settings.TELEGRAM_BOT_TOKEN
+    chat_id = settings.TELEGRAM_CHAT_ID
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+
+    try:
+        order = Order.objects.get(id=order_id)
+        user = order.user
+        message = f"✅ <b>Заказ #{order_id} отменен</b>\n"
         message += f"👤 Клиент: {user.full_name}\n"
         message += f"💰 Итоговая сумма: {order.total_price} ₽"
 

@@ -9,7 +9,7 @@ from django.contrib import messages
 
 
 from orders.models import Order
-from .forms import UserRegisterForm, CustomLoginForm
+from .forms import UserRegisterForm, CustomLoginForm, ProfileForm
 from .models import CustomUser
 
 
@@ -50,7 +50,21 @@ class LoginView(View):
 @login_required
 def user_logout(request):
     logout(request)
-    return redirect("main:popular_list")  #
+    return redirect("main:popular_list")
+
+
+@login_required
+def user_address(request):
+    profile = request.user
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect("users:profile")
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, "users/address.html", {"form": form})
 
 
 class ProfileView(LoginRequiredMixin, generic.DateDetailView):

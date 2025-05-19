@@ -52,7 +52,31 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField("Дата регистрации", default=timezone.now)
-
+    city = models.CharField(
+        max_length=100, blank=True, verbose_name="Город", help_text="Город доставки"
+    )
+    street = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Улица",
+        help_text="Название улицы без слова 'улица'",
+    )
+    house = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Дом",
+        help_text="Формат: 14к2, 34/2, 12стр5",
+    )
+    entrance = models.PositiveIntegerField(
+        null=True, blank=True, verbose_name="Подъезд"
+    )
+    floor = models.PositiveIntegerField(null=True, blank=True, verbose_name="Этаж")
+    apartment = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Квартира",
+        help_text="Номер квартиры или офиса",
+    )
     objects = CustomUserManager()
 
     USERNAME_FIELD = "phone_number"

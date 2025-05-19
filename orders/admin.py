@@ -17,7 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
         "delivery_type",
         "delivery_date",
         "delivery_time",
-        "address",
+        "comment",
         "total_price",
         "get_total_cost",
     )

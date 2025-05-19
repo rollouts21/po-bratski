@@ -25,7 +25,17 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("phone_number", "email", "full_name", "is_staff")
+    list_display = (
+        "phone_number",
+        "email",
+        "full_name",
+        "is_staff",
+        "street",
+        "house",
+        "apartment",
+        "entrance",
+        "floor",
+    )
     search_fields = ("phone_number", "email", "full_name")
     ordering = ("phone_number",)
 

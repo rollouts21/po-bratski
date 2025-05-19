@@ -21,6 +21,38 @@
               <span class="info-value">{{ user.email }}</span>
             </div>
           {% endif %}
+
+          <div class="info-item">
+            <span class="info-label">Адрес:</span>
+            <span class="info-value">
+              {% filter force_escape %}
+                {% if user.city %}
+                  Г. {{ user.city }}
+                {% endif %}
+                {% if user.street %}
+                  {% if user.city %}, {% endif %}Ул. {{ user.street }}
+                {% endif %}
+                {% if user.house %}
+                  {% if user.city or user.street %}, {% endif %}Д. {{ user.house }}
+                {% endif %}
+                {% if user.entrance %}
+                  {% if user.city or user.street or user.house %}, {% endif %}Подъезд {{ user.entrance }}
+                {% endif %}
+                {% if user.floor %}
+                  {% if user.city or user.street or user.house or user.entrance %}, {% endif %}Этаж {{ user.floor }}
+                {% endif %}
+                {% if user.apartment %}
+                  {% if user.city or user.street or user.house or user.entrance or user.floor %}, {% endif %}Кв. {{ user.apartment }}
+                {% endif %}
+              {% endfilter %}
+            </span>
+            <a href="{% url 'users:edit_address' %}">Изменить адрес</a>
+          </div>
+
+          {% if not user.city and not user.street and not user.house and not user.entrance and not user.floor and not user.apartment %}
+            <p>Адрес не указан</p>
+            <a href="{% url 'users:edit_address' %}">Указать адрес</a>
+          {% endif %}
         </div>
       </div>
 
@@ -34,15 +66,14 @@
                 <div class="order-meta">
                   <span class="order-number">Заказ №{{ order.id }}</span>
                   <span class="order-date">{{ order.created_at|date:'d.m.Y H:i' }}</span>
-                  <span class="order-status completed">
-                    {% comment %} {% if order.status == 'pending' %}
-                      Ожидание
-                    {% elif order.status == 'confirmed' %}
-                      успешно
-                    {% elif order.status == 'rejected' %}
-                      неуспешно
-                    {% endif %} {% endcomment %}
-                  </span>
+
+                  {% if order.status == 'pending' %}
+                    <span class="order-status pending" style="background-color: gray;">Ожидание</span>
+                  {% elif order.status == 'confirmed' %}
+                    <span class="order-status completed">Успешно</span>
+                  {% elif order.status == 'rejected' %}
+                    <span class="order-status rejected" style="background-color: red;">Неуспешно</span>
+                  {% endif %}
                 </div>
                 <div class="order-content">
                   <div class="order-items">
@@ -55,7 +86,6 @@
                           <span class="item-title">{{ item.product.name }}</span>
                           <div class="item-details">
                             <span>{{ item.quantity }} × {{ item.price }}₽</span>
-                            <span class="item-status available">В наличии</span>
                           </div>
                         </div>
                       </div>

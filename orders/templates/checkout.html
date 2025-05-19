@@ -76,13 +76,11 @@
                     <!-- Адрес доставки -->
                     <div class="form-group" id="address-field" 
                          style="display: {% if form.delivery_type.value == 'delivery' %}block{% else %}none{% endif %}">
-                        <label for="{{ form.address.id_for_label }}">Адрес доставки:</label>
-                        {{ form.address }}
-                        {% if form.address.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.address.errors.as_text }}
-                            </div>
-                        {% endif %}
+                        
+            
+
+            <label for="{{ form.comment.id_for_label }}">Комментарий</label>
+            {{ form.comment }}
                     </div>
 
                     <button type="submit" class="confirm-order btn-hover">Подтвердить заказ</button>
