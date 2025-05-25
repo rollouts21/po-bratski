@@ -1,5 +1,4 @@
 {% extends 'main/base.html' %}
-
 {% load static %}
 
 {% block content %}
@@ -7,38 +6,64 @@
     <div class="auth-container">
       <h1 class="section-title">Регистрация</h1>
 
+      <!-- Общие ошибки формы -->
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       <form class="auth-form" method="post">
         {% csrf_token %}
-        <div class="input-group">
+
+        <!-- Поле ФИО -->
+        <div class="input-group {% if form.full_name.errors %}has-error{% endif %}">
           <label>Фамилия Имя Отчество</label>
           {{ form.full_name }}
+          {% for error in form.full_name.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <div class="input-group">
+        <!-- Поле телефона -->
+        <div class="input-group {% if form.phone_number.errors %}has-error{% endif %}">
           <label>Телефон</label>
           {{ form.phone_number }}
+          {% for error in form.phone_number.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <div class="input-group">
+        <!-- Поле email -->
+        <div class="input-group {% if form.email.errors %}has-error{% endif %}">
           <label>Email</label>
           {{ form.email }}
+          {% for error in form.email.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <div class="input-group">
+        <!-- Пароль 1 -->
+        <div class="input-group {% if form.password1.errors %}has-error{% endif %}">
           <label>Пароль</label>
           {{ form.password1 }}
-        </div>
-        <div class="input-group">
-          <label>Повторите пароль</label>
-          {{ form.password2 }}
+          {% for error in form.password1.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <button type="submit" class="btn-hover auth-btn">
-          Зарегистрироваться
-          <!--                  <svg class="check-icon" viewBox="0 0 24 24">
-              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-            </svg>                  -->
-        </button>
+        <!-- Пароль 2 -->
+        <div class="input-group {% if form.password2.errors %}has-error{% endif %}">
+          <label>Повторите пароль</label>
+          {{ form.password2 }}
+          {% for error in form.password2.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-hover auth-btn">Зарегистрироваться</button>
 
         <div class="auth-links">
           <a href="{% url 'users:login' %}" class="link">Уже есть аккаунт? Войти</a>

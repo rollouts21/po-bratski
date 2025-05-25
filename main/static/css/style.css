@@ -329,7 +329,7 @@ body {
 .add-to-cart-btn:hover {
   background: #238276;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(42, 157, 143, 0.3);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 .add-to-cart-btn svg {
@@ -579,7 +579,7 @@ body {
 .cta-button:hover {
   background: #238276;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(42, 157, 143, 0.3);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 .cta-button::after {
@@ -676,7 +676,7 @@ body {
   }
 }
 
-/* Градиентные тени по краям */
+/* Градиентные  по краям */
 .categories-grid::after {
   content: "";
   position: absolute;
@@ -721,7 +721,7 @@ body {
 /* Ховер-эффекты */
 .whatsapp-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 [data-theme="dark"] .whatsapp-link:hover {
@@ -851,7 +851,7 @@ body {
   background: var(--bg-color);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--shadow-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border: 1px solid var(--border-color);
@@ -859,7 +859,7 @@ body {
 
 .promo-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 40px var(--shadow-color);
 }
 
 .promo-badge {
@@ -875,7 +875,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   animation: pulse 2s infinite;
-  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+  box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 .promo-image {
@@ -943,7 +943,7 @@ body {
 
 .promo-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 .promo-btn:hover::after {
@@ -1094,7 +1094,7 @@ body {
 
 .cta-button {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-  box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 8px 30px var(--shadow-color);
 }
 
 .section-title {
@@ -1503,7 +1503,8 @@ body {
 
   .filters-widget {
     margin-top: 40px;
-    min-width: 400px;
+    margin-left: 9px;
+    width: 380px;
     white-space: nowrap;
   }
 
@@ -1527,18 +1528,19 @@ body {
   gap: 10px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+  /* box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2); */
+  box-shadow: 0 4px 6px var(--shadow-color);
 }
 
 .apply-filters-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 6px 12px var(--shadow-color);
   background: linear-gradient(135deg, #45a049, #4caf50);
 }
 
 .apply-filters-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .filter-icon {
@@ -1749,7 +1751,7 @@ body {
   justify-content: center;
   gap: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 @media (max-width: 768px) {
@@ -1816,7 +1818,7 @@ body {
 
 .form-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 0 0 3px var(--shadow-color);
 }
 
 .auth-btn {
@@ -1918,7 +1920,7 @@ body {
 }
 
 .order-history {
-  background: var(--card-bg);
+  /* background: var(--card-bg); */
   padding: 2rem;
   border-radius: 16px;
 }
@@ -1969,6 +1971,10 @@ body {
     text-align: center;
   }
 
+  .order-history {
+    width: 100%;
+  }
+
   .auth-container,
   .profile-container {
     padding: 2rem;
@@ -1976,6 +1982,10 @@ body {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .order-card {
+    width: 300px;
   }
 }
 
@@ -1990,7 +2000,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 4px 6px var(--shadow-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2001,13 +2011,13 @@ body {
 
 .auth-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 6px 12px var(--shadow-color);
   background: linear-gradient(135deg, #45a049, #4caf50);
 }
 
 .auth-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .auth-btn::after {
@@ -2355,7 +2365,7 @@ body {
 .feedback-form input:focus,
 .feedback-form textarea:focus {
   border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 0 0 3px var(--shadow-color);
   outline: none;
 }
 
@@ -2379,7 +2389,7 @@ body {
 
 .feedback-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 /* Адаптивность */
@@ -2617,7 +2627,7 @@ body {
 
 .confirm-order:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 /* Стили для способов оплаты */
@@ -2720,4 +2730,23 @@ body {
   text-align: center;
   padding-top: 50px;
   margin-bottom: -50px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.has-error .form-input {
+  border-color: #dc3545;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
 }

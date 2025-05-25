@@ -46,13 +46,14 @@
                 {% endif %}
               {% endfilter %}
             </span>
-            <a href="{% url 'users:edit_address' %}">Изменить адрес</a>
+            <a href="{% url 'users:edit_address' %}" style="text-decoration: none; color: #007bff;">
+              {% if not user.city and not user.street and not user.house and not user.entrance and not user.floor and not user.apartment %}
+                Указать адрес
+              {% else %}
+                Изменить адрес
+              {% endif %}
+            </a>
           </div>
-
-          {% if not user.city and not user.street and not user.house and not user.entrance and not user.floor and not user.apartment %}
-            <p>Адрес не указан</p>
-            <a href="{% url 'users:edit_address' %}">Указать адрес</a>
-          {% endif %}
         </div>
       </div>
 

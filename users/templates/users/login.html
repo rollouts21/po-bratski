@@ -1,35 +1,42 @@
 {% extends 'main/base.html' %}
-
 {% load static %}
-
-{% block title %}
-  login
-{% endblock %}
 
 {% block content %}
   <main class="auth-page">
     <div class="auth-container">
       <h1 class="section-title">Вход в аккаунт</h1>
 
+      <!-- Общие ошибки формы -->
+      {% comment %} {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            <p class="error-message">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %} {% endcomment %}
+
       <form class="auth-form" method="post">
         {% csrf_token %}
-        <div class="input-group">
+
+        <!-- Поле телефона -->
+        <div class="input-group {% if form.phone_number.errors %}has-error{% endif %}">
           <label>Телефон</label>
           {{ form.phone_number }}
+          {% for error in form.phone_number.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <div class="input-group">
+        <!-- Поле пароля -->
+        <div class="input-group {% if form.password.errors %}has-error{% endif %}">
           <label>Пароль</label>
-
           {{ form.password }}
+          {% for error in form.password.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
         </div>
 
-        <button type="submit" class="btn-hover auth-btn">
-          Войти
-          <!--              <svg class="arrow-icon" viewBox="0 0 24 24">
-              <path d="M10 17l5-5-5-5v10z" />
-            </svg>              -->
-        </button>
+        <button type="submit" class="btn-hover auth-btn">Войти</button>
 
         <div class="auth-links">
           <a href="{% url 'users:register' %}" class="link">Создать аккаунт</a>
