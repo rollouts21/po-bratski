@@ -17,42 +17,44 @@
     </div>
   </section>
 
-  <section class="promo-section">
-    <h2 class="section-title">🔥 Горячие предложения</h2>
-    <div class="promo-scroll-container">
-      <div class="promo-grid">
-        {% for product_disc in products_disc %}
-          {% if product_disc.discount %}
-            <a href="{% url 'main:product_detail' product_disc.slug %}" style="text-decoration: none; color: var(--text-color)">
-              <div class="promo-card">
-                <div class="promo-badge">-{{ product_disc.discount }}%</div>
-                <img src="{{ product_disc.image.url }}" alt="Акция" class="promo-image" />
-                <div class="promo-content">
-                  <h3>{{ product_disc.name }}</h3>
-                  <div class="promo-timer">{{ product_disc.sell_price }} ₽</div>
-                  <div class="promo-timer">
-                    <p class="old-price">{{ product_disc.price }} ₽</p>
+  {% if products_disc %}
+    <section class="promo-section">
+      <h2 class="section-title">🔥 Горячие предложения</h2>
+      <div class="promo-scroll-container">
+        <div class="promo-grid">
+          {% for product_disc in products_disc %}
+            {% if product_disc.discount %}
+              <a href="{% url 'main:product_detail' product_disc.slug %}" style="text-decoration: none; color: var(--text-color)">
+                <div class="promo-card">
+                  <div class="promo-badge">-{{ product_disc.discount }}%</div>
+                  <img src="{{ product_disc.image.url }}" alt="Акция" class="promo-image" />
+                  <div class="promo-content">
+                    <h3>{{ product_disc.name }}</h3>
+                    <div class="promo-timer">{{ product_disc.sell_price }} ₽</div>
+                    <div class="promo-timer">
+                      <p class="old-price">{{ product_disc.price }} ₽</p>
+                    </div>
+                    <form action="{% url 'cart:add' product_disc.slug %}" method="post" class="add-to-cart-form" data-product-slug="{{ product_disc.slug }}">
+                      {% csrf_token %}
+                      <button class="btn-hover promo-btn add-to-cart-btn" type="submit">
+                        Успей купить{% comment %} <span class="product-qty" data-product="{{ product_disc.slug }}">
+                          {% with qty=request.session.cart|get_item:product_disc.slug %}
+                            {% if qty %}
+                              ({{ qty }})
+                            {% endif %}
+                          {% endwith %}
+                        </span> {% endcomment %}
+                      </button>
+                    </form>
                   </div>
-                  <form action="{% url 'cart:add' product_disc.slug %}" method="post" class="add-to-cart-form" data-product-slug="{{ product_disc.slug }}">
-                    {% csrf_token %}
-                    <button class="btn-hover promo-btn add-to-cart-btn" type="submit">
-                      Успей купить{% comment %} <span class="product-qty" data-product="{{ product_disc.slug }}">
-                        {% with qty=request.session.cart|get_item:product_disc.slug %}
-                          {% if qty %}
-                            ({{ qty }})
-                          {% endif %}
-                        {% endwith %}
-                      </span> {% endcomment %}
-                    </button>
-                  </form>
                 </div>
-              </div>
-            </a>
-          {% endif %}
-        {% endfor %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
 
   <!-- Категории -->
   <section class="categories" id="categories">

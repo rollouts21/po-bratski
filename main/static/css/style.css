@@ -1,11 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-
+@font-face {
+  font-family: "bimbimbambam";
+  src: url("./Heffer\ Cyr.otf") format("opentype");
+}
 /* Базовые стили */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+
+  font-family: "Roboto";
+  /* font-family: "bimbimbambam"; */
+  /* font-weight: 200; */
 }
 
 :root {
@@ -69,6 +75,7 @@ body {
 .logo p {
   color: var(--text-color);
   padding-top: 10px;
+  font-family: "bimbimbambam";
 }
 
 .logo-svg {
@@ -131,6 +138,9 @@ body {
     url("../img/header.jpg");
   background-size: cover;
   background-position: center;
+  transition: background-position 0.1s linear;
+  background-attachment: fixed;
+  will-change: background-position;
   display: flex;
   align-items: center;
   justify-content: center;

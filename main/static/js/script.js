@@ -39,14 +39,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Параллакс
   const initParallax = () => {
+    let ticking = false;
+    let pohot = document.querySelectorAll(".parallax");
+    elem;
     const updateParallax = () => {
       document.querySelectorAll(".parallax").forEach((el) => {
         const speed = parseFloat(el.dataset.parallaxSpeed) || 0.5;
-        el.style.backgroundPositionY = `${window.pageYOffset * speed}px`;
+        const yOffset = window.pageYOffset * speed;
+        el.style.backgroundPosition = `center ${-yOffset}px`;
       });
+      ticking = false;
     };
 
-    window.addEventListener("scroll", updateParallax);
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+
     updateParallax();
   };
 
