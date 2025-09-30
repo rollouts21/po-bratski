@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.urls import reverse
 from ckeditor.fields import RichTextField
 
 
@@ -81,3 +83,44 @@ class Product(models.Model):
             return round(self.price - self.price * self.discount / 100, 0)
 
         return self.price
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="images",
+        on_delete=models.CASCADE,
+        verbose_name="Товар",
+    )
+    image = models.ImageField(
+        upload_to="products/gallery/%Y/%m/%d",
+        verbose_name="Фотография",
+    )
+    alt_text = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name="Описание изображения",
+    )
+    position = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="Порядок в галерее",
+        help_text="Определяет очередность фотографий",
+    )
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
+
+    def clean(self):
+        super().clean()
+        if self.product_id:
+            existing = type(self).objects.filter(product=self.product)
+            if self.pk:
+                existing = existing.exclude(pk=self.pk)
+            if existing.count() >= 5:
+                raise ValidationError({"image": "У товара может быть не более 5 фотографий."})
+
+
+    class Meta:
+        ordering = ["position", "id"]
+        verbose_name = "Фото товара"
+        verbose_name_plural = "Фотографии товара"
+
+    def __str__(self):
+        return f"{self.product.name} — фото {self.pk}"

@@ -1,0 +1,4 @@
+*.pyc
+shop/settings.py
+/shop/settings.py
+

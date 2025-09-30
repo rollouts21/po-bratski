@@ -65,4 +65,31 @@ def product_list(request, category_slug=None):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True)
-    return render(request, "main/product/detail.html", {"product": product})
+    extra_images = list(product.images.order_by("position", "id"))
+    gallery_images = []
+
+    if product.image:
+        try:
+            gallery_images.append({"url": product.image.url, "alt": product.name})
+        except (ValueError, AttributeError):
+            pass
+
+    for image in extra_images:
+        try:
+            gallery_images.append(
+                {"url": image.image.url, "alt": image.alt_text or product.name}
+            )
+        except (ValueError, AttributeError):
+            continue
+
+    if not gallery_images:
+        gallery_images = None
+
+    return render(
+        request,
+        "main/product/detail.html",
+        {
+            "product": product,
+            "gallery_images": gallery_images,
+        },
+    )
